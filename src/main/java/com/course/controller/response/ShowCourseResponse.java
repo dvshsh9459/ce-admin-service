@@ -1,10 +1,10 @@
-package com.course.controller.request;
+package com.course.controller.response;
 
+import java.io.Serializable;
 import java.util.List;
 
-import com.course.repository.entity.Subject;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,11 +13,15 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddCourseRequest {
+@Builder
+public class ShowCourseResponse implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String courseName;
 	private String duration;
 	private String description;
 	private double fee;
-	private List<AddSubjectRequest> addSubjectToCourse;
-
+	private List<ShowSubjectResponse> showSubject;
 }

@@ -1,0 +1,15 @@
+#filebeat.inputs:
+#  - type: log
+#    paths:
+#     - "/var/log/springboot_logs/application.log"  # Use path inside the container 
+#    json.keys_under_root: true
+#    json.add_error_key: true
+#
+#setup.template.name: "course-service-logs"
+#setup.template.pattern: "course-service-logs-*"
+#setup.ilm.enabled: false  # Disable ILM if not needed
+#
+#output.elasticsearch:
+#  hosts: ["http://localhost:9200"]  # Use localhost instead of elasticsearch (as Spring Boot is not in Docker)
+#  index: "course-service-logs-%{+YYYY.MM.dd}"
+#  
