@@ -112,3 +112,46 @@
 ##networks:
 ##  elk-network:
 ##    driver: bridge
+
+
+# commands evuivalent docker compose yml
+# version: '3.8'
+
+# services:
+#   elasticsearch:
+#     image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+#     container_name: elasticsearch
+#     environment:
+#       - discovery.type=single-node
+#     ports:
+#       - "9200:9200"
+#       - "9300:9300"
+#     networks:
+#       - elk-network
+
+#   logstash:
+#     image: docker.elastic.co/logstash/logstash:7.13.4
+#     container_name: logstash
+#     depends_on:
+#       - elasticsearch
+#     ports:
+#       - "5000:5000"
+#       - "9600:9600"
+#     networks:
+#       - elk-network
+#     volumes:
+#       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf # Mount local Logstash config
+
+#   kibana:
+#     image: docker.elastic.co/kibana/kibana:7.13.4
+#     container_name: kibana
+#     depends_on:
+#       - elasticsearch
+#     ports:
+#       - "5601:5601"
+#     networks:
+#       - elk-network
+
+# networks:
+#   elk-network:
+#     driver: bridge
