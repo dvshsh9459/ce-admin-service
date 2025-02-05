@@ -38,6 +38,7 @@ public class CourseService implements ICourseService {
 	public ResponseEntity<CourseResponse> addCourse(AddCourseRequest addCourseRequest){
 		Course course = courseRepository.findCourseByCourseName(addCourseRequest.getCourseName());
 		if(course!=null) {
+		    log.warn(addCourseRequest.getCourseName() +" already exists in database");
 			return ResponseEntity.status(HttpStatus.OK).body(new CourseResponse("course already exists"));
 		}
 		List<Subject> courseSubjects = addCourseRequest.getAddSubjectToCourse().stream()
@@ -52,6 +53,7 @@ public class CourseService implements ICourseService {
 				.fee(addCourseRequest.getFee())
 				.subjects(courseSubjects).build();
 			courseRepository.save(newCourse);
+			log.info(addCourseRequest.getCourseName()+" new course is added in database");
 		return ResponseEntity.status(HttpStatus.OK).body(new CourseResponse("New course is sucessfully added"));
 		
 	}
@@ -62,10 +64,12 @@ public class CourseService implements ICourseService {
 	public ResponseEntity<CourseResponse> removeCourse(RemoveCourseRequest remCourseReq) {
 		Course courseNameToRemove = courseRepository.findCourseByCourseName(remCourseReq.getCourseName());
 		if(courseNameToRemove==null) {
+		    log.warn("No such course is available having course name " +remCourseReq.getCourseName() );
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CourseResponse("No such course is available"));
 		}
 		else {
 			courseRepository.delete(courseNameToRemove); 
+		    log.info("course removed sucessfully from database having name " +remCourseReq.getCourseName() );
 			return ResponseEntity.ok(new CourseResponse("Course removed successfully"));
 	}
   }
@@ -89,8 +93,12 @@ public class CourseService implements ICourseService {
 			.fee(updateCourseRequest.getFee())
 			.subjects(courseSubjects).build();
 			courseRepository.save(courseToUpdate);
+		    log.info("course updated sucessfully having course name" +updateCourseRequest.getCourseName() );
+
 			return ResponseEntity.status(HttpStatus.OK).body(new CourseResponse("Course is updated sucessfully "));
 			}
+	    log.warn("no such course is present having course name" +updateCourseRequest.getCourseName() );
+
 		return ResponseEntity.status(HttpStatus.OK).body(new CourseResponse("Something went Wrong wile updating the course "));
 	}
 
@@ -99,6 +107,7 @@ public class CourseService implements ICourseService {
 	@Transactional
 	@Cacheable(value = "courses") // Cache only the List<ShowCourseResponse> (data itself)
 	public List<ShowCourseResponse> showCourses() {
+	    log.info("course returned sucessfully to controller");
 	    List<Course> courses = courseRepository.findAll();
 	    
 	    // Prevent caching empty results
