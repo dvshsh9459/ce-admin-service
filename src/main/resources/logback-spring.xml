@@ -2,6 +2,29 @@
 <configuration>
 	<include resource="org/springframework/boot/logging/logback/base.xml" />
 	
+	 <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>http://localhost:3100/loki/api/v1/push</url>
+        </http>
+        <format>
+            <label>
+                <pattern>app=${course-service},host=${localhost},level=%level</pattern>
+                <readMarkers>true</readMarkers>
+            </label>
+            <message>
+                <pattern>
+                    {
+                    "level":"%level",
+                    "class":"%logger{36}",
+                    "thread":"%thread",
+                    "message": "%message",
+                    "requestId": "%X{X-Request-ID}"
+                    }
+                </pattern>
+            </message>
+         </format>
+     </appender>
+     
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} -%msg%n</pattern>
@@ -10,7 +33,7 @@
 
 	<appender name="LOGSTASH"
 		class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-		<destination>localhost:5000</destination>
+		<destination>localhost:9600</destination>
 		<encoder
 			class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
 			<providers>
@@ -37,6 +60,7 @@
 
 	<root level="INFO">
 		<appender-ref ref="LOGSTASH" />
+		<appender-ref ref="LOKI" />
 		<appender-ref ref="CONSOLE" />
 	</root>
 </configuration>
